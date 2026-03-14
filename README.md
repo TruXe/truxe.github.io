@@ -4,7 +4,7 @@
 
 Generate custom GitHub README badges instantly. No server required — runs entirely in the browser.
 
-**[→ Open the app](https://YOUR_USERNAME.github.io/GitIcoGenerator/)** (replace with your GitHub username after you enable Pages)
+**[→ Open the app](https://truxe.github.io/TagGen/)** (replace with your GitHub username after you enable Pages)
 
 ## Features
 
