@@ -73,10 +73,20 @@
       <h2 class="section-title">Generated Output</h2>
 
       <div class="output-actions">
+        <button type="button" class="btn btn--primary" id="copy-raw-link-btn" title="Copy raw image link for README">Copy raw image link</button>
         <button type="button" class="btn btn--primary" id="copy-svg-btn" title="Copy SVG code">Copy SVG</button>
         <button type="button" class="btn btn--primary" id="copy-md-btn" title="Copy Markdown">Copy Markdown</button>
         <button type="button" class="btn btn--secondary" id="download-svg-btn" title="Download SVG file">Download SVG</button>
         <button type="button" class="btn btn--ghost" id="theme-toggle" title="Toggle dark/light theme">Theme</button>
+      </div>
+
+      <div class="output-block output-block--highlight">
+        <div class="output-block__header">
+          <span>Raw image link for GitHub README</span>
+          <button type="button" class="btn btn--small btn--primary" id="copy-raw-link-inline">Copy raw link</button>
+        </div>
+        <p class="output-hint">Paste this link into your Markdown: <code>![alt](paste here)</code> or <code>&lt;img src="paste here" /&gt;</code></p>
+        <pre class="output-code output-code--wrap" id="raw-link-output"><code></code></pre>
       </div>
 
       <div class="output-block">
@@ -109,6 +119,15 @@
           <button type="button" class="btn btn--small" id="copy-url-btn">Copy</button>
         </div>
         <pre class="output-code output-code--url" id="url-output"><code></code></pre>
+      </div>
+
+      <div class="output-block output-block--url">
+        <div class="output-block__header">
+          <span>Raw GitHub URL (after adding SVG to your repo)</span>
+          <button type="button" class="btn btn--small" id="copy-raw-github-url-btn">Copy</button>
+        </div>
+        <p class="output-hint">Download the SVG, add it to your repo (e.g. <code>badges/windows-passing.svg</code>), then use this URL in README.</p>
+        <pre class="output-code output-code--url" id="raw-github-url-output"><code></code></pre>
       </div>
     </section>
   </div>

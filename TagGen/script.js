@@ -27,7 +27,9 @@
 
   // --- DOM refs (set in init) ---
   let labelInput, statusInput, labelColor, statusColor, labelColorHex, statusColorHex, iconSelect;
-  let previewContainer, svgOutput, mdOutput, mdImgOutput, urlOutput;
+  let previewContainer, svgOutput, mdOutput, mdImgOutput, urlOutput, rawLinkOutput, rawGithubUrlOutput;
+  let currentDataUri = '';
+  let currentRawGithubUrl = '';
 
   /**
    * Normalize hex color to #rrggbb (expand shorthand, lowercase).
@@ -144,10 +146,28 @@
     // Outputs
     const encoded = encodeSVG(svg);
     const dataUri = 'data:image/svg+xml;utf8,' + encoded;
+    currentDataUri = dataUri;
 
     svgOutput.querySelector('code').textContent = svg;
     mdOutput.querySelector('code').textContent = `![${label} ${status}](${dataUri})`;
     mdImgOutput.querySelector('code').textContent = `<img src="${dataUri}" alt="${escapeXml(label + ' ' + status)}" />`;
+
+    // Raw image link for README (show truncated in UI, full value on copy)
+    if (rawLinkOutput) {
+      const display = dataUri.length > 120 ? dataUri.slice(0, 120) + '...' : dataUri;
+      rawLinkOutput.querySelector('code').textContent = display;
+    }
+
+    // Raw GitHub URL template (user adds SVG to their repo, then uses this URL)
+    const badgeFileName = `badge-${label}-${status}.svg`.replace(/\s+/g, '-').toLowerCase();
+    const repoMatch = window.location.hostname.match(/^([a-zA-Z0-9-]+)\.github\.io$/);
+    const userOrOrg = repoMatch ? repoMatch[1] : 'USER';
+    const repoName = userOrOrg + '.github.io';
+    const branch = 'main';
+    currentRawGithubUrl = `https://raw.githubusercontent.com/${userOrOrg}/${repoName}/${branch}/badges/${badgeFileName}`;
+    if (rawGithubUrlOutput) {
+      rawGithubUrlOutput.querySelector('code').textContent = currentRawGithubUrl;
+    }
 
     // Share URL
     const params = new URLSearchParams();
@@ -314,6 +334,8 @@
     mdOutput = document.getElementById('md-output');
     mdImgOutput = document.getElementById('md-img-output');
     urlOutput = document.getElementById('url-output');
+    rawLinkOutput = document.getElementById('raw-link-output');
+    rawGithubUrlOutput = document.getElementById('raw-github-url-output');
 
     ['input', 'change'].forEach(function (ev) {
       labelInput.addEventListener(ev, updatePreview);
@@ -325,6 +347,17 @@
     initTheme();
     applyUrlParams();
 
+    document.getElementById('copy-raw-link-btn').addEventListener('click', function () {
+      copyToClipboard(currentDataUri, this);
+    });
+    var copyRawLinkInline = document.getElementById('copy-raw-link-inline');
+    if (copyRawLinkInline) copyRawLinkInline.addEventListener('click', function () {
+      copyToClipboard(currentDataUri, this);
+    });
+    var copyRawGithubUrlBtn = document.getElementById('copy-raw-github-url-btn');
+    if (copyRawGithubUrlBtn) copyRawGithubUrlBtn.addEventListener('click', function () {
+      copyToClipboard(currentRawGithubUrl || (rawGithubUrlOutput && rawGithubUrlOutput.querySelector('code').textContent), this);
+    });
     document.getElementById('copy-svg-btn').addEventListener('click', function () {
       copyToClipboard(svgOutput.querySelector('code').textContent, this);
     });
